@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="org.feng.mapper.AdminAuthorizationMapper">
+	
+	<!-- 多个，循环，可以把需要的条件，封装成一个list，在QueryPojo对象里，方便循环 
+select * from tb_user where id in (?, ?, ?) -->
+	<select id="getAdminAuthorizationsByIds" parameterType="queryAdminAuthorization" resultType="AdminAuthorization">
+		select * from admin_authorization
+		<where>
+			<if test="ids != null and ids.size() > 0">
+				<foreach collection="ids" item="id" open="and id in(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+</mapper>

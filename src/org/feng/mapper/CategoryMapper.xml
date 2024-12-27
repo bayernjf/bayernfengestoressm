@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="org.feng.mapper.CategoryMapper">
+	
+	<select id="getCategoriesByParentid" resultType="category">
+		select * from category where parentid = #{parentid}
+	</select>
+	
+	<select id="getById" resultType="category">
+		select * from category where id = #{id}
+	</select>
+	
+	<select id="getByDefault" resultType="good">
+		select * from good
+	</select>
+	
+	<!-- category里面有子category的集合 -->
+	<resultMap type="category" id="catetoryMap">
+		<id column="id" property="id"/>
+		<result column="type" property="type"/>
+		<collection property="childrenCate" ofType="category">
+			<id column="cid" property="id"/>
+			<result column="ctype" property="type"/>
+			<result column="parentid" property="parentid"/>
+		</collection>
+	</resultMap>
+	<select id="getCategoriesWithParentCategory" resultMap="catetoryMap">
+		SELECT p.id, p.type, c.id cid, c.type ctype, c.parentid
+		FROM category p
+		INNER JOIN category c
+		ON p.id = c.parentid
+	</select>
+	
+	<insert id="add">
+		insert into tb_user(username, password) values(#{username}, #{password})
+	</insert>
+	
+</mapper>

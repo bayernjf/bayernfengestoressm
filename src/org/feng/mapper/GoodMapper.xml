@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="org.feng.mapper.GoodMapper">
+	
+	<select id="getAll" resultType="good">
+		select * from good
+	</select>
+	
+	<select id="getAllGoodsByPage" resultType="good">
+		select * from good limit #{0}, #{1}
+	</select>
+	
+	<select id="getGoodsByCategoryParentid" resultType="good">
+		select * from good
+	</select>
+	
+	<select id="getTopTenGoods" resultType="good">
+		select * from good order by hot desc limit 0, 10
+	</select>
+	
+	<select id="getTopTenNewGoods" resultType="good">
+		select * from good order by production_date desc limit 0, 10
+	</select>
+	
+	<select id="getById" resultType="good">
+		select * from good where id = #{id}
+	</select>
+
+	<select id="getByIdOnlyOffshelf" resultType="good">
+		select * from good where id = #{id} and stat = 0
+	</select>
+
+	<select id="getGoodsByCategory_Id" resultType="good">
+		select * from good where category_id = #{category_id}
+	</select>
+
+	<select id="getGoodsByCategory_IdOnlyOffshelf" resultType="good">
+		select * from good where category_id = #{category_id} and stat = 0
+	</select>
+	
+	<select id="getGoodsByCategory_IdByPage" resultType="good">
+		select * from good where category_id = #{0} limit #{1}, #{2}
+	</select>
+
+	<select id="getGoodsByCategory_IdByPageOnlyOffshelf" resultType="good">
+		select * from good where category_id = #{0} and stat = 0 limit #{1}, #{2}
+	</select>
+	
+	<!-- 多个，循环，可以把需要的条件，封装成一个list，在QueryPojo对象里，方便循环 
+select * from tb_user where id in (?, ?, ?) -->
+	<select id="getGoodsByCategory_ids" parameterType="queryGood" resultType="good">
+		select * from good
+		<where>
+			<if test="category_ids != null and category_ids.size() > 0">
+				<foreach collection="category_ids" item="id" open="and category_id in(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="getGoodsByCategory_idsOnlyOffshelf" parameterType="queryGood" resultType="good">
+		select * from good
+		<where>
+			<if test="category_ids != null and category_ids.size() > 0">
+				<foreach collection="category_ids" item="id" open="and category_id in(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+		and stat = 0
+	</select>
+	
+	<select id="getGoodsByCategory_IdsOfParentidByPage" parameterType="queryGood" resultType="good">
+		select * from good
+		<where>
+			<if test="category_ids != null and category_ids.size() > 0">
+				<foreach collection="category_ids" item="id" open="and category_id in(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+		limit #{firstValueOfLimit}, #{secondValueOfLimit}
+	</select>
+
+	<select id="getGoodsByCategory_IdsOfParentidByPageOnlyOffshelf" parameterType="queryGood" resultType="good">
+		select * from good
+		<where>
+			<if test="category_ids != null and category_ids.size() > 0">
+				<foreach collection="category_ids" item="id" open="and category_id in(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+		and stat = 0
+		limit #{firstValueOfLimit}, #{secondValueOfLimit}
+	</select>
+	
+	<insert id="add">
+		insert into good(name, marketprice, estoreprice, category_id, num, titleimage, description, production_date, expiry_date, stat)
+		values(#{name}, #{marketprice}, #{estoreprice}, #{category_id}, #{num}, #{titleimage}, #{description}, #{production_date}, #{expiry_date}, #{stat})
+	</insert>
+	
+	<select id="getGoodsByLike" resultType="good">
+		SELECT *
+		FROM good
+		WHERE name LIKE CONCAT('%',#{keyWords},'%')
+		OR description LIKE CONCAT('%',#{keyWords},'%')
+	</select>
+
+	<select id="getGoodsByLikeOnlyOffshelf" resultType="good">
+		SELECT *
+		FROM good
+		WHERE (name LIKE CONCAT('%',#{keyWords},'%')
+		OR description LIKE CONCAT('%',#{keyWords},'%'))
+		AND stat = 0
+	</select>
+	
+	<select id="getGoodsByLikeAndPage" parameterType="QueryGood" resultType="good">
+		SELECT *
+		FROM good
+		WHERE name LIKE CONCAT('%',#{keyWords},'%')
+		OR description LIKE CONCAT('%',#{keyWords},'%')
+		LIMIT #{firstValueOfLimit}, #{secondValueOfLimit}
+	</select>
+	
+	<select id="getGoodsByLikeAndPageOnlyOffshelf" parameterType="QueryGood" resultType="good">
+		SELECT *
+		FROM good
+		WHERE (name LIKE CONCAT('%',#{keyWords},'%')
+		OR description LIKE CONCAT('%',#{keyWords},'%'))
+		AND stat = 0
+		LIMIT #{firstValueOfLimit}, #{secondValueOfLimit}
+	</select>
+	
+	<update id="updateGood">
+		update good set
+			name = #{name},
+			marketprice = #{marketprice},
+			estoreprice = #{estoreprice},
+			category_id = #{category_id},
+			num = #{num},
+			titleimage = #{titleimage},
+			description = #{description},
+			production_date = #{production_date},
+			expiry_date = #{expiry_date},
+			stat = #{stat}
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteById">
+		delete from good where id = #{id}
+	</delete>
+
+	<delete id="deleteByIdS" parameterType="queryGood">
+		delete from good
+		<where>
+			<if test="ids != null and ids.size() > 0">
+				<foreach collection="ids" item="id" open="and id in(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+	</delete>
+	
+	<update id="turnONStatOfGoodsByIdS" parameterType="queryGood">
+		update good set stat = 1
+		<where>
+			<if test="ids != null and ids.size() > 0">
+				<foreach collection="ids" item="id" open="and id in(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+	</update>
+	<update id="turnOFFStatOfGoodsByIdS" parameterType="queryGood">
+		update good set stat = 0
+		<where>
+			<if test="ids != null and ids.size() > 0">
+				<foreach collection="ids" item="id" open="and id in(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+	</update>
+	
+	<update id="modifyStat">
+		update good set stat = #{stat} where id = #{id}
+	</update>
+	
+	<select id="getGoodsByStat" resultType="good">
+		select * from good where stat = #{stat}
+	</select>
+
+	<select id="getGoodsByStatAndPage" resultType="good">
+		select * from good where stat = #{0} limit #{1}, #{2}
+	</select>
+	
+</mapper>

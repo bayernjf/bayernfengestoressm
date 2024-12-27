@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="org.feng.mapper.UserMapper">
+	
+	<select id="getByNameAndPass" resultType="user">
+		select * from user where username = #{username} and password = #{password}
+	</select>
+	
+	<select id="getByPhoneAndPassword" resultType="user">
+		select * from user where phone = #{phone} and password = #{password}
+	</select>
+	
+	<select id="getByEmailAndPassword" resultType="user">
+		select * from user where email = #{email} and password = #{password}
+	</select>
+	
+	<select id="loginByPhone" resultType="user">
+		select * from user where phone = #{phone}
+	</select>
+	
+	<select id="getUserByUsername" resultType="user">
+		select * from user where username = #{username}
+	</select>
+
+	<select id="getUserByEmail" resultType="user">
+		select * from user where email = #{email}
+	</select>
+	
+	<update id="updateUserByPhone">
+		update user set password = #{password} where phone = #{phone}
+	</update>
+	
+	<update id="updateUser">
+		update user
+		set username = #{username},
+		password = #{password},
+		birthday = #{birthday},
+		sex = #{sex},
+		photo = #{photo},
+		name = #{name},
+		stat = #{stat},
+		email = #{email},
+		phone = #{phone}
+		where id = #{id}
+	</update>
+	
+	<update id="updateStat">
+		update user
+		set stat = #{stat}
+		where uucode = #{uucode}
+	</update>
+
+	<update id="updateLogintime">
+		update user
+		set logintime = #{logintime}
+		where id = #{id}
+	</update>
+	
+	<insert id="add">
+		insert into user(username, password, phone, stat, birthday, sex, photo, name, email, uucode, registertime) 
+		values(#{username}, #{password}, #{phone}, #{stat}, #{birthday}, #{sex}, #{photo}, #{name}, #{email}, #{uucode}, #{registertime})
+	</insert>
+	
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+        ">
+	
+	
+	<!-- 释放静态资源文件 -->
+	<mvc:resources location="/static-resources/js/" mapping="/static-resources/js/**"/>
+	<mvc:resources location="/static-resources/bank_img/" mapping="/static-resources/bank_img/**"/>
+	<mvc:resources location="/static-resources/img/" mapping="/static-resources/img/**"/>
+	<mvc:resources location="/static-resources/css/" mapping="/static-resources/css/**"/>
+	<mvc:resources location="/static-resources/image/" mapping="/static-resources/image/**"/>
+	<mvc:resources location="/static-resources/images/" mapping="/static-resources/images/**"/>
+
+	<mvc:resources location="/static-resources/admin/js/" mapping="/static-resources/admin/js/**"/>
+	<mvc:resources location="/static-resources/admin/img/" mapping="/static-resources/admin/img/**"/>
+	<mvc:resources location="/static-resources/admin/css/" mapping="/static-resources/admin/css/**"/>
+	<mvc:resources location="/static-resources/admin/fonts/" mapping="/static-resources/admin/fonts/**"/>
+	<mvc:resources location="/static-resources/admin/images/" mapping="/static-resources/admin/images/**"/>
+	<mvc:resources location="/static-resources/admin/kindeditor-4.1.10/" mapping="/static-resources/admin/kindeditor-4.1.10/**"/>
+	
+	<bean class="org.feng.util.MyExceptionResolver"/>
+	
+	<!-- 注解的方式 -->
+	<!-- 可以不需要
+	<context:annotation-config/> -->
+	<context:component-scan base-package="org.feng"/>
+<!-- 	<context:component-scan base-package="org.feng.controller"/> -->
+	
+	<mvc:annotation-driven conversion-service="dateConverter"/>
+	
+	<bean id="dateConverter" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<set>
+				<bean class="org.feng.util.DateConverter"/>
+			</set>
+		</property>
+	</bean>
+	
+	<mvc:default-servlet-handler/>
+	
+	<!-- 配置处理器映射器 可以不写
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+	 -->
+	<!-- 配置处理器适配器 可以不写
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
+	-->
+	<!-- 配置视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/content/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	
+	<!-- 文件上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize"><value>10485760</value></property>
+	</bean>
+	
+	<!-- 配置拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/"/>
+			<!-- 自定义的拦截器 -->
+			<bean class="org.feng.interceptor.MyInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+</beans>

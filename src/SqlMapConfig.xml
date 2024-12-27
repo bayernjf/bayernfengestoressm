@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- 配置开发使用环境 -->
+<configuration>
+
+	<!-- 空头文件，后续可以配置一下别名、二级缓存、延迟加载 -->
+	
+	<typeAliases>
+		<package name="org.feng"/>
+	</typeAliases>
+	
+</configuration>

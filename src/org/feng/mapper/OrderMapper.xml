@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="org.feng.mapper.OrderMapper">
+	
+	<!-- <insert id="add">
+		insert into order(id, user_id, totalprice, address, stat, receivename, phone)
+		values(#{id}, #{user_id}, #{totalprice}, #{address}, #{stat}, #{receivename}, #{phone})
+	</insert> -->
+	<insert id="add">
+		INSERT INTO `bayernfengestoressm`.`order` (`id`, `user_id`, `totalprice`, `address`, `stat`, `createtime`, `receivename`, `phone`, `statName`)
+		VALUES (#{id}, #{user_id}, #{totalprice}, #{address}, #{stat}, #{createtime}, #{receivename}, #{phone}, #{statName});
+	</insert>
+	
+<!-- 	<update id="updateStat">
+		update order set stat = #{stat} where id = #{id}
+	</update> -->
+	<update id="updateStat">
+		UPDATE `bayernfengestoressm`.`order` SET `stat`=#{stat}, `statName`=#{statName}
+		WHERE (`id`=#{id});
+	</update>
+	
+	<select id="getOrdersByUser_IdAndStat" resultType="order">
+		select * from `bayernfengestoressm`.`order` where (`user_id` = #{0} and `stat` = #{1})
+	</select>
+
+	<select id="getOrdersByStat" resultType="order">
+		select * from `bayernfengestoressm`.`order` where (`stat` = #{0})
+	</select>
+	
+	<select id="getOrdersByStatAndPage" resultType="order">
+		<!-- select * from order where stat = #{0} limit #{1}, #{2} -->
+		select * from `bayernfengestoressm`.`order` where (`stat` = #{0}) limit #{1}, #{2}
+	</select>
+	
+</mapper>

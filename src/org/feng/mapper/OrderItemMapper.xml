@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="org.feng.mapper.OrderItemMapper">
+	
+	<select id="getOrderItemsByOrder_Id" resultType="orderItem">
+		select * from orderitem where order_id = #{order_id}
+	</select>
+	
+	<insert id="addListOfOrderItem">
+		insert into orderitem(order_id, good_id, buynum)
+		values
+		<foreach collection="list" item="oi" separator=",">
+			( #{oi.order_id}, #{oi.good_id}, #{oi.buynum} )
+		</foreach>
+	</insert>
+	
+</mapper>

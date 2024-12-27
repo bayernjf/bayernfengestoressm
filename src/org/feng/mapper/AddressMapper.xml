@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="org.feng.mapper.AddressMapper">
+	
+	<select id="getAll" resultMap="addressMap">
+		SELECT p.codeid pid, p.cityName provinceName, c.codeid cid, c.cityName cityName, d.codeid did, d.cityName districtName
+		FROM province p
+		INNER JOIN province c
+		ON p.codeid = c.parentid
+		INNER JOIN province d
+		ON c.codeid = d.parentid
+	</select>
+	<resultMap type="province" id="addressMap">
+		<!-- 省 -->
+		<id column="pid" property="codeid"/>
+		<result column="provinceName" property="cityName"/>
+		<!-- 省里的市 -->
+		<collection property="childrenProvinces" ofType="province">
+			<id column="cid" property="codeid"/>
+			<result column="cityName" property="cityName"/>
+			<!-- 市里的区 -->
+			<collection property="childrenProvinces" ofType="province">
+				<id column="did" property="codeid"/>
+				<result column="districtName" property="cityName"/>
+			</collection>
+		</collection>
+	</resultMap>
+	
+	<insert id="add">
+		insert into tb_user(username, password) values(#{username}, #{password})
+	</insert>
+	
+</mapper>
